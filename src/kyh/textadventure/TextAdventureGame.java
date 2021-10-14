@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class TextAdventureGame {
     int row;
     int col;
-
     Room[][] map;
+    Scanner input;
 
     public static void save(int row, int col) {
         File file = new File("./save/saved_game.txt");
@@ -63,9 +63,20 @@ public class TextAdventureGame {
             }
         }
     }
+    private String[] readUserInput() {
+        System.out.print("> ");
+        String command = input.nextLine();
 
+        // Dela upp kommandot i delar, varje ord blir en sträng i en array
+        // Vi delar upp det inmatade värdet vid varje mellanslag
+        String[] commandParts = command.split(" ");
+        return commandParts;
+    }
 
     public void initialization() {
+        // Init av scanner input for reading user input
+        input = new Scanner(System.in);
+
         // Initialisering
         Room pinkRoom = new Room("Pink room", "This is a room with pink walls filled with pink furniture");
         Room aHall = new Room("A hall", "A large hallway with a fancy rug on the floor");
@@ -106,71 +117,67 @@ public class TextAdventureGame {
         while (running) {
             // 1. Skriv ut i vilket rum vi är i
             System.out.println(map[row][col].toString());
-
             // 2. Läs in kommando från användaren
-            System.out.print("> ");
-            String command = input.nextLine();
-
-            // 3. Dela upp kommandot i delar, varje ord blir en sträng i en array
-            //    Vi delar upp det inmatade värdet vid varje mellanslag
-            String[] commandParts = command.split(" ");
+            String[] commandParts = readUserInput();
+            String command = commandParts[0];
 
             // 4. Kollar vilket "huvudkommando" som angivits
             //    Dessa är:
             //      - go
             //      - save
             //      - load
+            //      - look
             //      - quit
-            if (commandParts[0].equalsIgnoreCase("go")) {
-                // Vi har angett go som kommando
-                updatePlayerPosition(commandParts[1]);
 
+            if (command.equalsIgnoreCase("go")) {
                 // Kontrollera att man har skrivit något efter go, alltså en riktning
                 if (commandParts.length >= 2) {
-
+                    updatePlayerPosition(commandParts[1]);
                     System.out.println("Going " + commandParts[1]);
                 } else {
                     System.out.println("You can't go without any direction");
                 }
             }
 
-            if (command.equalsIgnoreCase("look at item")) {
+            else if (command.equalsIgnoreCase("look")) {
                 String itemDescription = map[row][col].getItemDescription();
                 System.out.println(itemDescription);
             }
-
-            if (command.equalsIgnoreCase("save")) {
+            else if (command.equalsIgnoreCase("save")) {
                 save(row, col);
             }
-
-            if (command.equalsIgnoreCase("load")) {
-                String position = load();
-                if (position != null) {
-                    String[] pos = position.split(", ");
-                    int oldRow = row;
-                    int oldCol = col;
-                    row = Integer.parseInt(pos[0]);
-                    col = Integer.parseInt(pos[1]);
-                    if (row >= map.length) {
-                        System.out.println("Error reading row coordinates from file. Are you cheating?");
-                        row = oldRow;
-                        col = oldCol;
-                    } else {
-                        if (col >= map[row].length) {
-                            System.out.println("Error reading row coordinates from file. Are you cheating?");
-                            row = oldRow;
-                            col = oldCol;
-                        }
-                    }
-                }
+            else if (command.equalsIgnoreCase("load")) {
+                LoadSavedGame();
             }
-
-            if (command.equalsIgnoreCase("quit")) {
+            else if (command.equalsIgnoreCase("quit")) {
                 running = false;
             }
         }
     }
-        public void quit() {
+
+    private void LoadSavedGame() {
+        String position = load();
+        if (position != null) {
+            String[] pos = position.split(", ");
+            int oldRow = row;
+            int oldCol = col;
+            row = Integer.parseInt(pos[0]);
+            col = Integer.parseInt(pos[1]);
+            if (row >= map.length) {
+                System.out.println("Error reading row coordinates from file. Are you cheating?");
+                row = oldRow;
+                col = oldCol;
+            } else {
+                if (col >= map[row].length) {
+                    System.out.println("Error reading row coordinates from file. Are you cheating?");
+                    row = oldRow;
+                    col = oldCol;
+                }
+            }
+        }
+    }
+
+    public void quit() {
             System.out.println("Thanks for playing TAG");
 
     }
