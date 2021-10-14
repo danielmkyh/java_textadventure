@@ -75,7 +75,7 @@ public class TextAdventureGame {
         boolean running = true;
 
         // Här börjar spelloopen
-        while(running) {
+        while (running) {
             // 1. Skriv ut i vilket rum vi är i
             // System.out.println(map[row][col].getName());
             // System.out.println(map[row][col].getDescription());
@@ -96,83 +96,79 @@ public class TextAdventureGame {
             //      - save
             //      - load
             //      - quit
-            if(commandParts[0].equalsIgnoreCase("go")) {
+            if (commandParts[0].equalsIgnoreCase("go")) {
                 // Vi har angett go som kommando
 
 
                 // Kontrollera att man har skrivit något efter go, alltså en riktning
-                if(commandParts.length >= 2) {
+                if (commandParts.length >= 2) {
                     // Kolla efter riktning
-                    if(commandParts[1].equalsIgnoreCase("north")) {
+                    if (commandParts[1].equalsIgnoreCase("north")) {
                         row--;
                         // Kontrollera så vi inte hamnar utanför kartan
-                        if(row < 0) {
+                        if (row < 0) {
                             row = 0;
                         }
-                    }
-                    else if(commandParts[1].equalsIgnoreCase("south")) {
+                    } else if (commandParts[1].equalsIgnoreCase("south")) {
                         row++;
-                        if(row >= map.length) {
+                        if (row >= map.length) {
                             row--;
                         }
-                    }
-                    else if(commandParts[1].equalsIgnoreCase("east")) {
+                    } else if (commandParts[1].equalsIgnoreCase("east")) {
                         col++;
-                        if(col >= map[row].length) {
+                        if (col >= map[row].length) {
                             col--;
                         }
-                    }
-                    else if(commandParts[1].equalsIgnoreCase("west")) {
+                    } else if (commandParts[1].equalsIgnoreCase("west")) {
                         col--;
-                        if(col < 0) {
+                        if (col < 0) {
                             col = 0;
                         }
                     }
                     System.out.println("Going " + commandParts[1]);
-                }
-                else {
+                } else {
                     System.out.println("You can't go without any direction");
                 }
             }
 
-            if(command.equalsIgnoreCase("look at item")) {
+            if (command.equalsIgnoreCase("look at item")) {
                 String itemDescription = map[row][col].getItemDescription();
                 System.out.println(itemDescription);
             }
 
-            if(command.equalsIgnoreCase("save")) {
+            if (command.equalsIgnoreCase("save")) {
                 save(row, col);
             }
 
-            if(command.equalsIgnoreCase("load")) {
+            if (command.equalsIgnoreCase("load")) {
                 String position = load();
-                if(position != null) {
+                if (position != null) {
                     String[] pos = position.split(", ");
                     int oldRow = row;
                     int oldCol = col;
                     row = Integer.parseInt(pos[0]);
                     col = Integer.parseInt(pos[1]);
-                    if(row >= map.length) {
+                    if (row >= map.length) {
                         System.out.println("Error reading row coordinates from file. Are you cheating?");
                         row = oldRow;
                         col = oldCol;
-                    }
-                    else {
-                        if(col >= map[row].length) {
+                    } else {
+                        if (col >= map[row].length) {
                             System.out.println("Error reading row coordinates from file. Are you cheating?");
                             row = oldRow;
                             col = oldCol;
                         }
                     }
                 }
-
             }
 
-            if(command.equalsIgnoreCase("quit")) {
+            if (command.equalsIgnoreCase("quit")) {
                 running = false;
             }
         }
-        System.out.println("Thanks for playing TAG");
+    }
+        public void quit() {
+            System.out.println("Thanks for playing TAG");
+
     }
 }
-
